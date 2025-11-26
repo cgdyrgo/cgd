@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <title>Minimal WebGL</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+  </style>
+</head>
 <body>
-<canvas id="gl" width=”800" height="400"></canvas>
+<canvas id="glCanvas"></canvas>
 <script>
-const gl = document.getElementById("gl").getContext("webgl");
-gl.clearColor(0, 0, 0, 1);
-gl.clear(gl.COLOR_BUFFER_BIT);
+  // Get WebGL context
+  const canvas = document.getElementById("glCanvas");
+  const gl = canvas.getContext("webgl");
+
+  if (!gl) {
+    alert("WebGL not supported in your browser.");
+  } else {
+    // Set clear color to dark gray
+    gl.clearColor(0.2, 0.2, 0.2, 1.0);
+    // Clear the canvas
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
 </script>
 </body>
 </html>
