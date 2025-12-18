@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo">MyName.</div>
+        <div class="logo">MyName<span class="dot">.</span></div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#work">Work</a></li>
+            <li><a href="#work">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
+        <div class="menu-toggle">☰</div>
     </nav>
 
     <section id="home" class="hero">
+        <div class="video-overlay"></div>
         <div class="video-container">
             <video autoplay muted loop playsinline class="back-video">
                 <source src="background.webm" type="video/webm">
@@ -27,63 +32,83 @@
         </div>
         
         <div class="hero-content">
-            <h1>Creative Developer</h1>
-            <p>Building clean and functional web experiences.</p>
-            <a href="#work" class="btn">View My Work</a>
+            <h1>Visual Storyteller</h1>
+            <p>Creating immersive digital experiences.</p>
+            <a href="#work" class="btn btn-primary">View Projects</a>
         </div>
     </section>
 
-    <section id="about" class="container section-padding">
-        <h2>About Me</h2>
-        <div class="about-grid">
-            <div class="about-text">
-                <p>Hello! I am a creative professional based in [City]. I specialize in [Your Skills]. I love creating websites that are fast, accessible, and visually appealing.</p>
-                <p>When I am not coding, you can find me [Your Hobbies].</p>
-            </div>
-            </div>
-    </section>
-
-    <section id="work" class="bg-light section-padding">
+    <section id="work" class="section-padding">
         <div class="container">
-            <h2>Selected Work</h2>
+            <div class="section-header">
+                <h2>Latest Work</h2>
+                <a href="#" class="view-all">View all &rarr;</a>
+            </div>
+
             <div class="project-grid">
                 
-                <div class="project-card">
-                    <div class="project-image" style="background-color: #ddd;"></div> <h3>Project Title 01</h3>
-                    <p>Brief description of the project and technologies used.</p>
-                    <a href="#">See Project &rarr;</a>
-                </div>
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Animation</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Neon City</h3>
+                        <p class="date">Oct 2023</p>
+                        <p class="description">A 3D loop exploring cyberpunk aesthetics and lighting.</p>
+                    </div>
+                </article>
 
-                <div class="project-card">
-                    <div class="project-image" style="background-color: #ccc;"></div> <h3>Project Title 02</h3>
-                    <p>Brief description of the project and technologies used.</p>
-                    <a href="#">See Project &rarr;</a>
-                </div>
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">VFX</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Particle Storm</h3>
+                        <p class="date">Sep 2023</p>
+                        <p class="description">Simulation study using geometry nodes.</p>
+                    </div>
+                </article>
 
-                <div class="project-card">
-                    <div class="project-image" style="background-color: #bbb;"></div> <h3>Project Title 03</h3>
-                    <p>Brief description of the project and technologies used.</p>
-                    <a href="#">See Project &rarr;</a>
-                </div>
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Design</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Interface Kit</h3>
+                        <p class="date">Aug 2023</p>
+                        <p class="description">UI design system for a sci-fi game HUD.</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Film</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Short Film</h3>
+                        <p class="date">July 2023</p>
+                        <p class="description">Award winning short film about space travel.</p>
+                    </div>
+                </article>
 
             </div>
         </div>
     </section>
 
-    <section id="contact" class="container section-padding text-center">
-        <h2>Get In Touch</h2>
-        <p>Currently open for freelance opportunities.</p>
-        <br>
-        <a href="mailto:email@example.com" class="btn btn-dark">Email Me</a>
-        
-        <footer class="footer">
-            <p>&copy; 2024 My Name. All rights reserved.</p>
-            <div class="socials">
-                <a href="#">LinkedIn</a>
-                <a href="#">GitHub</a>
-                <a href="#">Twitter</a>
-            </div>
-        </footer>
+    <section id="contact" class="section-padding bg-darker">
+        <div class="container text-center">
+            <h2>Let's Create Together</h2>
+            <p class="footer-text">Open for freelance opportunities in motion design and web development.</p>
+            <a href="mailto:email@example.com" class="btn btn-outline">Get in Touch</a>
+            
+            <footer class="footer">
+                <p>&copy; 2024 My Name. Built with clean code.</p>
+            </footer>
+        </div>
     </section>
 
 </body>
