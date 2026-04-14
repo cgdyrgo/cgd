@@ -1,145 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Obsidian Curator System</title>
-<style>
-body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGD Portfolio</title>
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);height:100vh;width:100vw}
-.tile{position:relative;cursor:pointer;overflow:hidden}
-.tile img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:.4s}
-.tile:hover img{filter:grayscale(0);transform:scale(1.05)}
-.tile span{position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:.2em;color:#ff8c00;opacity:0;transition:.3s}
-.tile:hover span{opacity:1}
+  <script src="https://cdn.tailwindcss.com"></script>
 
-/* MODAL */
-.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(25px)}
-.modal{width:90vw;height:90vh;max-width:520px;aspect-ratio:2/3;background:#111;display:grid;grid-template-rows:33% 34% 33%;overflow:hidden}
-.section{position:relative;overflow:hidden}
-.section img,video{width:100%;height:100%;object-fit:cover}
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+      height: 100vh;
+    }
 
-/* middle */
-.middle{display:grid;grid-template-columns:1fr 1fr}
-.bio{padding:12px;font-size:12px;color:#ddd;display:flex;flex-direction:column;justify-content:center}
-.bio button{margin-top:10px;padding:8px;border:0;border-radius:999px;background:#ff8c00;color:#000;font-weight:700;cursor:pointer}
-.portrait{position:relative}
-.portrait h1{position:absolute;bottom:10px;left:10px;font-size:14px;margin:0}
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      height: 100vh;
+      width: 100vw;
+    }
 
-.bottom{display:grid;grid-template-columns:1fr 1fr}
-</style>
+    .cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: 0.3s;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    }
+
+    .cell:hover .overlay {
+      opacity: 1;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- GRID -->
-<div class="grid" id="grid"></div>
-
-<!-- MODAL -->
-<div class="overlay" id="overlay" onclick="if(event.target.id==='overlay')closeModal()">
-  <div class="modal" id="modal">
-
-    <div class="section">
-      <video id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
-    </div>
-
-    <div class="section middle">
-      <div class="bio">
-        <p id="bioText"></p>
-        <button id="portfolioBtn">Portfolio</button>
-      </div>
-      <div class="portrait">
-        <img id="foto" />
-        <h1 id="name"></h1>
-      </div>
-    </div>
-
-    <div class="section bottom">
-      <img id="img1" />
-      <img id="img2" />
-    </div>
-
-  </div>
-</div>
+<main id="grid" class="grid-container"></main>
 
 <script>
-
-/* =========================
-   DATA LOADER (SYSTEM CORE)
-========================= */
+let students = [];
 
 async function loadStudents() {
   const res = await fetch('./bilder/students.json');
-  return await res.json();
+  students = await res.json();
+  buildGrid();
 }
 
-async function loadText(path) {
-  const res = await fetch(path);
-  return await res.text();
-}
+function buildGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
 
-function asset(folder, file) {
-  return `./bilder/${folder}/${file}`;
-}
+  const last = students.at(-1);
+  const rest = students.slice(0, -1);
 
-/* =========================
-   GRID COMPONENT
-========================= */
+  let i = 0;
 
-function createGrid(students) {
-  const grid = document.getElementById('grid');
+  // ROWS 1-2 + 3 (utom special case)
+  for (; i < rest.length; i++) {
+    const s = rest[i];
 
-  students.forEach(s => {
-    const tile = document.createElement('div');
-    tile.className = 'tile';
+    const cell = document.createElement("div");
+    cell.className = "cell relative overflow-hidden";
 
-    tile.innerHTML = `
-      <img src="${asset(s.folder,'foto.jpg')}" />
-      <span>${s.name.toUpperCase()}</span>
+    cell.innerHTML = `
+      <img src="./bilder/${s.folder}/foto.jpg" />
+      <div class="overlay"></div>
     `;
 
-    tile.onclick = () => openStudent(s);
-    grid.appendChild(tile);
-  });
+    grid.appendChild(cell);
+  }
+
+  // ROW 3 LEFT (last student)
+  const lastCell = document.createElement("div");
+  lastCell.className = "cell relative overflow-hidden col-span-2";
+
+  lastCell.innerHTML = `
+    <img src="./bilder/${last.folder}/foto.jpg" />
+    <div class="overlay"></div>
+  `;
+
+  grid.appendChild(lastCell);
+
+  // ROW 3 RIGHT (LOGO)
+  const logo = document.createElement("div");
+  logo.className = "relative overflow-hidden col-span-3";
+
+  logo.innerHTML = `
+    <img src="./logo.jpg" class="w-full h-full object-cover" />
+  `;
+
+  grid.appendChild(logo);
 }
 
-/* =========================
-   MODAL COMPONENT
-========================= */
-
-async function openStudent(student) {
-
-  const bio = await loadText(asset(student.folder,'bio.txt'));
-  const portfolio = await loadText(asset(student.folder,'portfoliolink.txt'));
-
-  document.getElementById('bioText').textContent = bio;
-  document.getElementById('name').textContent = student.name;
-
-  document.getElementById('foto').src = asset(student.folder,'foto.jpg');
-  document.getElementById('img1').src = asset(student.folder,'bild1.jpg');
-  document.getElementById('img2').src = asset(student.folder,'bild2.jpg');
-  document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
-
-  const btn = document.getElementById('portfolioBtn');
-  btn.onclick = () => window.open(portfolio, '_blank');
-
-  document.getElementById('overlay').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('overlay').style.display = 'none';
-}
-
-/* =========================
-   INIT
-========================= */
-
-(async function init(){
-  const students = await loadStudents();
-  createGrid(students);
-})();
-
+loadStudents();
 </script>
 
 </body>
