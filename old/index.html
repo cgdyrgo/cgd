@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">MyName<span class="dot">.</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="menu-toggle">☰</div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="video-overlay"></div>
+        <div class="video-container">
+            <video autoplay muted loop playsinline class="back-video">
+                <source src="background.webm" type="video/webm">
+                <source src="background.mp4" type="video/mp4">
+            </video>
+        </div>
+        
+        <div class="hero-content">
+            <h1>Visual Storyteller</h1>
+            <p>Creating immersive digital experiences.</p>
+            <div style="margin-top: 20px; font-size: 1.5rem; opacity: 0.7;">&darr;</div>
+        </div>
+    </section>
+
+    <section id="work" class="section-padding">
+        <div class="container-fluid">
+            
+            <div class="project-grid">
+                
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Animation</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Neon City</h3>
+                        <p class="description">A 3D loop exploring cyberpunk aesthetics and lighting.</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">VFX</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Particle Storm</h3>
+                        <p class="description">Simulation study using geometry nodes and physics.</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Design</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Interface Kit</h3>
+                        <p class="description">UI design system for a sci-fi game HUD.</p>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Film</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Short Film</h3>
+                        <p class="description">Award winning short film about space travel.</p>
+                    </div>
+                </article>
+
+                 <article class="card">
+                    <div class="card-image">
+                        <div class="placeholder-img"></div>
+                        <span class="tag">Render</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Automotive</h3>
+                        <p class="description">Studio lighting setup for car rendering.</p>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding bg-darker">
+        <div class="container text-center">
+            <h2>Let's Create</h2>
+            <p class="footer-text">Open for freelance opportunities.</p>
+            <a href="mailto:email@example.com" class="btn btn-outline">Get in Touch</a>
+            <footer class="footer">
+                <p>&copy; 2024 My Name.</p>
+            </footer>
+        </div>
+    </section>
+
+</body>
+</html>
