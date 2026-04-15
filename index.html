@@ -100,10 +100,10 @@ function createGrid(students) {
 
   students.forEach((s, i) => {
 
-    // 👉 SPECIAL: Rad 3 börjar vid index 10 (rad 0–4, 5–9, 10–14)
+    //  När vi når början av rad 3
     if (i === 10) {
 
-      // 1️⃣ Vänster cell (vanlig student)
+      //  Student (vänster)
       const tile = document.createElement('div');
       tile.className = 'tile';
 
@@ -115,7 +115,7 @@ function createGrid(students) {
       tile.onclick = () => openStudent(s);
       grid.appendChild(tile);
 
-      // 2️⃣ Logga (tar upp resten av raden = 4 kolumner)
+      //  Logga (höger, 4 kolumner)
       const logoTile = document.createElement('div');
       logoTile.className = 'tile';
       logoTile.style.gridColumn = "span 4";
@@ -126,13 +126,10 @@ function createGrid(students) {
 
       grid.appendChild(logoTile);
 
-      return; // hoppa vidare
+      return;
     }
 
-    // 👉 Hoppa över resten av rad 3 (index 11–14)
-    if (i > 10 && i < 15) return;
-
-    // 👉 Alla andra tiles (oförändrat)
+    //  Alla andra studenter fortsätter som vanligt (INGEN skip)
     const tile = document.createElement('div');
     tile.className = 'tile';
 
