@@ -17,7 +17,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(25px)}
-.modal{width:90vw;height:90vh;max-width:520px;aspect-ratio:2/3;background:#111;display:grid;grid-template-rows:33% 34% 33%;overflow:hidden}
+.modal{width:100vw;height:100vh;max-width:520px;aspect-ratio:2/3;background:#111;display:grid;grid-template-rows:33% 34% 33%;overflow:hidden}
 .section{position:relative;overflow:hidden}
 .section img,video{width:100%;height:100%;object-fit:cover}
 
@@ -45,7 +45,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 <div class="grid" id="grid"></div>
 
 <!-- MODAL -->
-<div class="overlay" id="overlay" onclick="if(event.target.id==='overlay')closeModal()">
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal">
 
     <div class="section">
@@ -161,9 +161,16 @@ async function openStudent(student) {
   document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
 
   const btn = document.getElementById('portfolioBtn');
-  btn.onclick = () => window.open(portfolio, '_blank');
+  btn.onclick = (e) => {
+     e.stopPropagation();
+     window.open(portfolio, '_blank');
+  };
 
   document.getElementById('overlay').style.display = 'flex';
+}
+
+function handleOverlayClick(e) {
+  closeModal();
 }
 
 function closeModal() {
