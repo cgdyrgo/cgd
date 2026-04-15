@@ -30,19 +30,10 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 
 .bottom{display:grid;grid-template-columns:1fr 1fr}
 
-/* SPECIAL ROW 3 */
-.row3-logo {
-  grid-column: span 1;
-  background: #000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.row3-logo img{
-  width:100%;
-  height:100%;
+/* ROW 3 LOGO ONLY (safe override) */
+#logoTile img{
   object-fit:contain;
+  background:#000;
   padding:20px;
 }
 
@@ -58,7 +49,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   <div class="modal" id="modal">
 
     <div class="section">
-      <video id="showreel" autoplay muted loop></video>
+      <video id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
     </div>
 
     <div class="section middle">
@@ -109,18 +100,6 @@ function createGrid(students) {
 
   students.forEach((s, i) => {
 
-    // SPECIAL RULE: row 3 right cell = logo
-    // grid is 5 columns → row 3 starts at index 10 (5*2)
-    const rowIndex = Math.floor(i / 5);
-
-    // inject logo cell AFTER row 2 last item
-    if (i === 10) {
-      const logoTile = document.createElement('div');
-      logoTile.className = 'tile row3-logo';
-      logoTile.innerHTML = `<img src="./logo.jpg" />`;
-      grid.appendChild(logoTile);
-    }
-
     const tile = document.createElement('div');
     tile.className = 'tile';
 
@@ -130,9 +109,24 @@ function createGrid(students) {
     `;
 
     tile.onclick = () => openStudent(s);
+
     grid.appendChild(tile);
+
+    // ONLY ADD LOGO AFTER 10th ITEM (start of row 3 right side)
+    if (i === 9) {
+      const logo = document.createElement('div');
+      logo.className = 'tile';
+      logo.id = 'logoTile';
+
+      logo.innerHTML = `
+        <img src="./logo.jpg" />
+      `;
+
+      grid.appendChild(logo);
+    }
   });
 }
+
 /* =========================
    MODAL COMPONENT
 ========================= */
