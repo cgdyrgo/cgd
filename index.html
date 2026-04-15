@@ -100,6 +100,39 @@ function createGrid(students) {
 
   students.forEach((s, i) => {
 
+    // 👉 SPECIAL: Rad 3 börjar vid index 10 (rad 0–4, 5–9, 10–14)
+    if (i === 10) {
+
+      // 1️⃣ Vänster cell (vanlig student)
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+
+      tile.innerHTML = `
+        <img src="${asset(s.folder,'foto.jpg')}" />
+        <span>${s.name.toUpperCase()}</span>
+      `;
+
+      tile.onclick = () => openStudent(s);
+      grid.appendChild(tile);
+
+      // 2️⃣ Logga (tar upp resten av raden = 4 kolumner)
+      const logoTile = document.createElement('div');
+      logoTile.className = 'tile';
+      logoTile.style.gridColumn = "span 4";
+
+      logoTile.innerHTML = `
+        <img src="./logo.jpg" style="object-fit:contain; background:#000;" />
+      `;
+
+      grid.appendChild(logoTile);
+
+      return; // hoppa vidare
+    }
+
+    // 👉 Hoppa över resten av rad 3 (index 11–14)
+    if (i > 10 && i < 15) return;
+
+    // 👉 Alla andra tiles (oförändrat)
     const tile = document.createElement('div');
     tile.className = 'tile';
 
@@ -109,21 +142,7 @@ function createGrid(students) {
     `;
 
     tile.onclick = () => openStudent(s);
-
     grid.appendChild(tile);
-
-    // ONLY ADD LOGO AFTER 10th ITEM (start of row 3 right side)
-    if (i === 9) {
-      const logo = document.createElement('div');
-      logo.className = 'tile';
-      logo.id = 'logoTile';
-
-      logo.innerHTML = `
-        <img src="./logo.jpg" />
-      `;
-
-      grid.appendChild(logo);
-    }
   });
 }
 
