@@ -37,15 +37,13 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   padding:20px;
 }
 
-@media (max-width: 768px) {
+@media (max-aspect-ratio: 9/10) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto;
-    grid-auto-rows: 1fr;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
   }
 
-  .tile {
-    aspect-ratio: 1 / 1;
+  .tile img {
+    object-position: center;
   }
 }
 
