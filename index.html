@@ -10,31 +10,124 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 /* GRID */
 .grid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);height:100vh;width:100vw}
 .tile{position:relative;cursor:pointer;overflow:hidden}
-.tile img{width:100%;height:auto;min-height:100%;object-fit:cover;filter:grayscale(1);transition:.4s}
+.tile img:not(.logo){width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.4);filter:grayscale(1);transition:.4s}
 .tile:hover img{filter:grayscale(0);transform:scale(1.05)}
 .tile span{position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:.2em;color:#ff8c00;opacity:0;transition:.3s}
+.tile img.logo{transform: none;object-fit: contain;}
 .tile:hover span{opacity:1}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(25px)}
-.modal{width:100vw;height:100vh;max-width:520px;aspect-ratio:2/3;background:#111;display:grid;grid-template-rows:33% 34% 33%;overflow:hidden}
+.modal{width:100vw;height:100vh;max-width:520px;aspect-ratio:2/3;background:#111;display:grid;grid-template-rows:28% 48% 34%;overflow:hidden}
 .section{position:relative;overflow:hidden}
 .section img,video{width:100%;height:100%;object-fit:cover}
 
 /* middle */
-.middle{display:grid;grid-template-columns:1fr 1fr}
-.bio{padding:12px;font-size:12px;color:#ddd;display:flex;flex-direction:column;justify-content:center}
-.bio button{margin-top:10px;padding:8px;border:0;border-radius:999px;background:#ff8c00;color:#000;font-weight:700;cursor:pointer}
-.portrait{position:relative}
-.portrait h1{position:absolute;bottom:10px;left:10px;font-size:14px;margin:0}
+.middle{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  height:100%;
+}
+
+.middle > *{
+  min-height:0;
+}
+
+.bio{
+  padding:12px;
+  color:#ddd;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+/* text tar all fri yta och klipper vid overflow */
+#bioText{
+  font-size:clamp(13px, 1.9vw, 18px);
+  line-height:1.3;
+  overflow:hidden;
+  flex:1;
+  min-height:0;
+}
+
+/* knappen låses i botten */
+.bio button{
+  margin-top:auto;
+  padding:8px;
+  border:0;
+  border-radius:999px;
+  background:#ff8c00;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+  font-size:clamp(10px, 1vw, 13px);
+}
+
+
+
+.portrait{
+  position:relative;
+}
+
+.portrait h1{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  font-size:14px;
+  margin:0;
+}
 
 .bottom{display:grid;grid-template-columns:1fr 1fr}
 
 /* ROW 3 LOGO ONLY (safe override) */
 #logoTile img{
+  transform:none;
+  width: 100%;
+  height: 100%;
   object-fit:contain;
+  object-position: center;
   background:#000;
-  padding:20px;
+  padding:0px;
+  display:block;
+}
+
+@media (max-aspect-ratio: 9/10) {
+  .grid {
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+  }
+
+  .tile img {
+    object-position: center;
+  }
+}
+
+@media (min-aspect-ratio: 7/10) {
+
+  body {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .grid {
+    width: 55vw;
+    height: 100vh;
+  }
+
+  .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 45vw;
+    height: 100vh;
+  }
+
+  .modal {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
 }
 
 </style>
@@ -118,10 +211,11 @@ function createGrid(students) {
       //  Logga (höger, 4 kolumner)
       const logoTile = document.createElement('div');
       logoTile.className = 'tile';
+      logoTile.id = 'logoTile';
       logoTile.style.gridColumn = "span 4";
 
       logoTile.innerHTML = `
-        <img src="./logo.jpg" style="object-fit:contain; background:#000;" />
+        <img class="logo" src="./logo.jpg" />
       `;
 
       grid.appendChild(logoTile);
