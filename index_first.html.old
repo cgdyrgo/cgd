@@ -41,7 +41,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   <div class="modal" id="modal">
 
     <div class="section">
-      <video id="showreel" autoplay muted loop></video>
+      <video id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
     </div>
 
     <div class="section middle">
