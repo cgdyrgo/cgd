@@ -78,6 +78,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 }
 
 .bio{
+  container-type: size;
   padding:10px;
   color:#ddd;
   display:flex;
@@ -89,7 +90,8 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 
 /* text tar all fri yta och klipper vid overflow */
 #bioText{
-  font-size:clamp(13px, 1.9vw, 18px);
+  font-size:clamp(13px, 1.9vw, 18px);/*fallback*/
+  font-size: clamp(12px, 2.5cqw, 18px);
   line-height:1.3;
   overflow:hidden;
   flex:1;
