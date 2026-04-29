@@ -260,7 +260,7 @@ function createGrid(students) {
 
       tile.innerHTML = `
         <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
-        <img class="img-hover" src="${asset(s.folder,'bild_select.jpg')}" />
+        <img class="img-hover" src="${asset(s.folder,'foto_select.jpg')}" />
         <span>${s.name.toUpperCase()}</span>
       `;
 
@@ -288,7 +288,7 @@ function createGrid(students) {
 
     tile.innerHTML = `
       <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
-      <img class="img-hover" src="${asset(s.folder,'bild_select.jpg')}" />
+      <img class="img-hover" src="${asset(s.folder,'foto_select.jpg')}" />
       <span>${s.name.toUpperCase()}</span>
     `;
 
@@ -309,7 +309,7 @@ async function openStudent(student) {
   document.getElementById('bioText').textContent = bio;
   document.getElementById('name').textContent = student.name;
 
-  document.getElementById('foto').src = asset(student.folder,'bild_select.jpg');
+  document.getElementById('foto').src = asset(student.folder,'foto_select.jpg');
   document.getElementById('img1').src = asset(student.folder,'bild1.jpg');
   document.getElementById('img2').src = asset(student.folder,'bild2.jpg');
   document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
