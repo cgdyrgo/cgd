@@ -60,6 +60,21 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   object-fit:contain;
 }
 
+.tile.selected .img-default{
+  opacity:0;
+}
+
+.tile.selected .img-hover{
+  opacity:1;
+}
+
+.tile.selected span{
+  opacity:1;
+  color:#00ff66;
+}
+
+
+  
 /* MODAL */
 .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(10px)}
 .modal{width:100vw;height:100vh;height:100dvh;max-width:520px;aspect-ratio:2/3;background:#000;display:grid;grid-template-rows:30% 30% 40%;overflow:hidden}
@@ -185,6 +200,8 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   }
 }
 
+
+
 </style>
 </head>
 <body>
@@ -222,7 +239,13 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
 <script>
 
 /* =========================
-   DATA LOADER (SYSTEM CORE)
+   STATE (markerade studenter)
+========================= */
+
+const selectedStudents = new Set();
+
+/* =========================
+   DATA LOADER
 ========================= */
 
 async function loadStudents() {
@@ -240,7 +263,35 @@ function asset(folder, file) {
 }
 
 /* =========================
-   GRID COMPONENT
+   GRID
+========================= */
+
+function createTile(s) {
+  const tile = document.createElement('div');
+  tile.className = 'tile';
+
+  // restore selection state
+  if (selectedStudents.has(s.folder)) {
+    tile.classList.add('selected');
+  }
+
+  tile.innerHTML = `
+    <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
+    <img class="img-hover" src="${asset(s.folder,'foto_select.jpg')}" />
+    <span>${s.name.toUpperCase()}</span>
+  `;
+
+  tile.onclick = () => {
+    selectedStudents.add(s.folder);
+    tile.classList.add('selected');
+    openStudent(s);
+  };
+
+  return tile;
+}
+
+/* =========================
+   GRID BUILDER
 ========================= */
 
 function createGrid(students) {
@@ -248,23 +299,11 @@ function createGrid(students) {
 
   students.forEach((s, i) => {
 
-    //  När vi når början av rad 3
+    // special row (logo break)
     if (i === 10) {
 
-      //  Student (vänster)
-      const tile = document.createElement('div');
-      tile.className = 'tile';
+      grid.appendChild(createTile(s));
 
-      tile.innerHTML = `
-        <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
-        <img class="img-hover" src="${asset(s.folder,'foto_select.jpg')}" />
-        <span>${s.name.toUpperCase()}</span>
-      `;
-
-      tile.onclick = () => openStudent(s);
-      grid.appendChild(tile);
-
-      //  Logga (höger, 4 kolumner)
       const logoTile = document.createElement('div');
       logoTile.className = 'tile';
       logoTile.id = 'logoTile';
@@ -279,23 +318,12 @@ function createGrid(students) {
       return;
     }
 
-    //  Alla andra studenter fortsätter som vanligt (INGEN skip)
-    const tile = document.createElement('div');
-    tile.className = 'tile';
-
-    tile.innerHTML = `
-      <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
-      <img class="img-hover" src="${asset(s.folder,'foto_select.jpg')}" />
-      <span>${s.name.toUpperCase()}</span>
-    `;
-
-    tile.onclick = () => openStudent(s);
-    grid.appendChild(tile);
+    grid.appendChild(createTile(s));
   });
 }
 
 /* =========================
-   MODAL COMPONENT
+   MODAL
 ========================= */
 
 async function openStudent(student) {
@@ -313,12 +341,16 @@ async function openStudent(student) {
 
   const btn = document.getElementById('portfolioBtn');
   btn.onclick = (e) => {
-     e.stopPropagation();
-     window.open(portfolio, '_blank');
+    e.stopPropagation();
+    window.open(portfolio, '_blank');
   };
 
   document.getElementById('overlay').style.display = 'flex';
 }
+
+/* =========================
+   CLOSE MODAL
+========================= */
 
 function handleOverlayClick(e) {
   closeModal();
@@ -338,6 +370,6 @@ function closeModal() {
 })();
 
 </script>
-
+  
 </body>
 </html>
