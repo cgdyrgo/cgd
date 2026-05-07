@@ -402,43 +402,40 @@ async function openStudent(student) {
   document.getElementById('bioText').textContent = bio;
   document.getElementById('name').textContent = student.name;
 
+  // GET ELEMENTS FIRST
+  const foto = document.getElementById('foto');
+  const img1 = document.getElementById('img1');
+  const img2 = document.getElementById('img2');
+  const showreel = document.getElementById('showreel');
+
+  // RESET OLD MEDIA
   resetMedia(foto);
   resetMedia(img1);
   resetMedia(img2);
   resetMedia(showreel);
 
-  // FOTO
-  const foto = document.getElementById('foto');
-  foto.src = asset(student.folder,'foto_select.jpg');
-  revealMedia(foto);
-
+  // OPEN MODAL IMMEDIATELY
   document.getElementById('overlay').style.display = 'flex';
 
-    // VIDEO
-  const showreel = document.getElementById('showreel');
-  showreel.src = asset(student.folder,'showreel.webm');
-  revealMedia(showreel);
-
-  // BOTTOM 1
-  const img1 = document.getElementById('img1');
+  // SET SOURCES
+  foto.src = asset(student.folder,'foto_select.jpg');
   img1.src = asset(student.folder,'bild1.jpg');
-  revealMedia(img1);
-
-  // BOTTOM 2
-  const img2 = document.getElementById('img2');
   img2.src = asset(student.folder,'bild2.jpg');
-   revealMedia(img2);
+  showreel.src = asset(student.folder,'showreel.webm');
 
+  // REVEAL IN SEQUENCE
+  revealMedia(foto)
+    .then(() => revealMedia(img1))
+    .then(() => revealMedia(img2))
+    .then(() => revealMedia(showreel));
 
-
+  // BUTTON
   const btn = document.getElementById('portfolioBtn');
 
   btn.onclick = (e) => {
     e.stopPropagation();
     window.open(portfolio, '_blank');
   };
-
-  
 }
 
 /* =========================
