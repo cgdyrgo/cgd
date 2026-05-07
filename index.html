@@ -73,7 +73,18 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   color:#fff;
 }
 
+/* =========================
+   MEDIA REVEAL SYSTEM
+========================= */
 
+.media{
+  opacity:0;
+  transition:opacity .4s ease;
+}
+
+.media-ready{
+  opacity:1;
+}
   
 /* MODAL */
 .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(10px)}
@@ -214,7 +225,7 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
   <div class="modal" id="modal">
 
     <div class="section">
-      <video id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
+      <video class="media" id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
     </div>
 
     <div class="section middle">
@@ -223,14 +234,14 @@ body{margin:0;background:#000;color:#fff;font-family:system-ui;overflow:hidden}
         <button id="portfolioBtn">Portfolio</button>
       </div>
       <div class="portrait">
-        <img id="foto" />
+        <img class="media" id="foto" />
         <h1 id="name"></h1>
       </div>
     </div>
 
     <div class="section bottom">
-      <img id="img1" />
-      <img id="img2" />
+      <img class="media" id="img1" />
+      <img class="media" id="img2" />
     </div>
 
   </div>
@@ -262,6 +273,35 @@ function asset(folder, file) {
   return `./bilder/${folder}/${file}`;
 }
 
+/* =========================
+   MEDIA REVEAL
+========================= */
+
+function revealMedia(el){
+
+  // reset state
+  el.classList.remove('media-ready');
+
+  const done = () => {
+    el.classList.add('media-ready');
+  };
+
+  // image loaded
+  if(el.tagName === 'IMG'){
+
+    if(el.complete){
+      done();
+    } else {
+      el.onload = done;
+    }
+  }
+
+  // video loaded
+  if(el.tagName === 'VIDEO'){
+    el.onloadeddata = done;
+  }
+}
+  
 /* =========================
    GRID
 ========================= */
@@ -334,12 +374,28 @@ async function openStudent(student) {
   document.getElementById('bioText').textContent = bio;
   document.getElementById('name').textContent = student.name;
 
-  document.getElementById('foto').src = asset(student.folder,'foto_select.jpg');
-  document.getElementById('img1').src = asset(student.folder,'bild1.jpg');
-  document.getElementById('img2').src = asset(student.folder,'bild2.jpg');
-  document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
+  // FOTO
+  const foto = document.getElementById('foto');
+  foto.src = asset(student.folder,'foto_select.jpg');
+  revealMedia(foto);
+
+  // BOTTOM 1
+  const img1 = document.getElementById('img1');
+  img1.src = asset(student.folder,'bild1.jpg');
+  revealMedia(img1);
+
+  // BOTTOM 2
+  const img2 = document.getElementById('img2');
+  img2.src = asset(student.folder,'bild2.jpg');
+  revealMedia(img2);
+
+  // VIDEO
+  const showreel = document.getElementById('showreel');
+  showreel.src = asset(student.folder,'showreel.webm');
+  revealMedia(showreel);
 
   const btn = document.getElementById('portfolioBtn');
+
   btn.onclick = (e) => {
     e.stopPropagation();
     window.open(portfolio, '_blank');
