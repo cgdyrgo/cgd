@@ -279,27 +279,31 @@ function asset(folder, file) {
 
 function revealMedia(el){
 
-  // reset state
-  el.classList.remove('media-ready');
+  return new Promise((resolve) => {
 
-  const done = () => {
-    el.classList.add('media-ready');
-  };
+    el.classList.remove('media-ready');
 
-  // image loaded
-  if(el.tagName === 'IMG'){
+    const done = () => {
+      el.classList.add('media-ready');
+      resolve();
+    };
 
-    if(el.complete){
-      done();
-    } else {
-      el.onload = done;
+    // IMAGES
+    if(el.tagName === 'IMG'){
+
+      if(el.complete){
+        requestAnimationFrame(done);
+      } else {
+        el.onload = done;
+      }
     }
-  }
 
-  // video loaded
-  if(el.tagName === 'VIDEO'){
-    el.onloadeddata = done;
-  }
+    // VIDEO
+    if(el.tagName === 'VIDEO'){
+      el.onloadeddata = done;
+    }
+
+  });
 }
   
 /* =========================
@@ -377,22 +381,24 @@ async function openStudent(student) {
   // FOTO
   const foto = document.getElementById('foto');
   foto.src = asset(student.folder,'foto_select.jpg');
-  revealMedia(foto);
+  await revealMedia(foto);
+
+    // VIDEO
+  const showreel = document.getElementById('showreel');
+  showreel.src = asset(student.folder,'showreel.webm');
+  await revealMedia(showreel);
 
   // BOTTOM 1
   const img1 = document.getElementById('img1');
   img1.src = asset(student.folder,'bild1.jpg');
-  revealMedia(img1);
+  await revealMedia(img1);
 
   // BOTTOM 2
   const img2 = document.getElementById('img2');
   img2.src = asset(student.folder,'bild2.jpg');
-  revealMedia(img2);
+ await revealMedia(img2);
 
-  // VIDEO
-  const showreel = document.getElementById('showreel');
-  showreel.src = asset(student.folder,'showreel.webm');
-  revealMedia(showreel);
+
 
   const btn = document.getElementById('portfolioBtn');
 
