@@ -281,12 +281,14 @@ function resetMedia(el){
    MEDIA load
 ========================= */
 
-function loadMedia(el, src){
+function loadMedia(el, src) {
 
   return new Promise((resolve) => {
 
+    // STEP 1: HARD RESET (prevents old image flash)
     el.classList.remove('media-ready');
     el.style.opacity = 0;
+    el.removeAttribute('src'); // IMPORTANT: clears previous render immediately
 
     const done = () => {
       requestAnimationFrame(() => {
@@ -296,21 +298,18 @@ function loadMedia(el, src){
       });
     };
 
-    if(el.tagName === 'IMG'){
+    if (el.tagName === 'IMG') {
 
       el.onload = done;
-
-      // IMPORTANT: force reload case safety
       el.src = src;
 
-      if(el.complete && el.naturalWidth){
-        done();
-      }
+      // cached images safety
+      if (el.complete && el.naturalWidth) done();
 
       return;
     }
 
-    if(el.tagName === 'VIDEO'){
+    if (el.tagName === 'VIDEO') {
 
       el.onloadeddata = done;
       el.src = src;
@@ -318,7 +317,6 @@ function loadMedia(el, src){
 
       return;
     }
-
   });
 }
   
@@ -388,6 +386,11 @@ function createGrid(students) {
 
 async function openStudent(student) {
 
+  foto.style.opacity = 0;
+  img1.style.opacity = 0;
+  img2.style.opacity = 0;
+  showreel.style.opacity = 0;
+  
   const bio = await loadText(asset(student.folder,'bio.txt'));
   const portfolio = await loadText(asset(student.folder,'portfoliolink.txt'));
 
