@@ -278,53 +278,45 @@ function resetMedia(el){
 }
   
 /* =========================
-   MEDIA REVEAL
+   MEDIA load
 ========================= */
 
-function revealMedia(el){
+function loadMedia(el, src){
 
   return new Promise((resolve) => {
 
-    // hide immediately
     el.classList.remove('media-ready');
+    el.style.opacity = 0;
 
     const done = () => {
-
-      // tiny delay allows repaint
       requestAnimationFrame(() => {
+        el.style.opacity = '';
         el.classList.add('media-ready');
         resolve();
       });
     };
 
-    // IMAGE
     if(el.tagName === 'IMG'){
 
-      // force hidden while loading
-      el.style.opacity = 0;
+      el.onload = done;
 
-      if(el.complete && el.naturalWidth !== 0){
+      // IMPORTANT: force reload case safety
+      el.src = src;
 
+      if(el.complete && el.naturalWidth){
         done();
-
-      } else {
-
-        el.onload = () => {
-          el.style.opacity = '';
-          done();
-        };
       }
+
+      return;
     }
 
-    // VIDEO
     if(el.tagName === 'VIDEO'){
 
-      el.style.opacity = 0;
+      el.onloadeddata = done;
+      el.src = src;
+      el.load();
 
-      el.onloadeddata = () => {
-        el.style.opacity = '';
-        done();
-      };
+      return;
     }
 
   });
@@ -402,37 +394,19 @@ async function openStudent(student) {
   document.getElementById('bioText').textContent = bio;
   document.getElementById('name').textContent = student.name;
 
-  // GET ELEMENTS FIRST
   const foto = document.getElementById('foto');
   const img1 = document.getElementById('img1');
   const img2 = document.getElementById('img2');
   const showreel = document.getElementById('showreel');
 
-  // RESET OLD MEDIA
-  resetMedia(foto);
-  resetMedia(img1);
-  resetMedia(img2);
-  resetMedia(showreel);
-
-  // OPEN MODAL IMMEDIATELY
   document.getElementById('overlay').style.display = 'flex';
 
-  // SET SOURCES
-  foto.src = asset(student.folder,'foto_select.jpg');
-  img1.src = asset(student.folder,'bild1.jpg');
-  img2.src = asset(student.folder,'bild2.jpg');
-  showreel.src = asset(student.folder,'showreel.webm');
+  await loadMedia(foto, asset(student.folder,'foto_select.jpg'));
+  await loadMedia(img1, asset(student.folder,'bild1.jpg'));
+  await loadMedia(img2, asset(student.folder,'bild2.jpg'));
+  await loadMedia(showreel, asset(student.folder,'showreel.webm'));
 
-  // REVEAL IN SEQUENCE
-  revealMedia(foto)
-    .then(() => revealMedia(img1))
-    .then(() => revealMedia(img2))
-    .then(() => revealMedia(showreel));
-
-  // BUTTON
-  const btn = document.getElementById('portfolioBtn');
-
-  btn.onclick = (e) => {
+  document.getElementById('portfolioBtn').onclick = (e) => {
     e.stopPropagation();
     window.open(portfolio, '_blank');
   };
