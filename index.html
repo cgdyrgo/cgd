@@ -381,24 +381,24 @@ async function openStudent(student) {
   // FOTO
   const foto = document.getElementById('foto');
   foto.src = asset(student.folder,'foto_select.jpg');
-  await revealMedia(foto);
+  arevealMedia(foto);
 
   document.getElementById('overlay').style.display = 'flex';
 
     // VIDEO
   const showreel = document.getElementById('showreel');
   showreel.src = asset(student.folder,'showreel.webm');
-  await revealMedia(showreel);
+  revealMedia(showreel);
 
   // BOTTOM 1
   const img1 = document.getElementById('img1');
   img1.src = asset(student.folder,'bild1.jpg');
-  await revealMedia(img1);
+  revealMedia(img1);
 
   // BOTTOM 2
   const img2 = document.getElementById('img2');
   img2.src = asset(student.folder,'bild2.jpg');
- await revealMedia(img2);
+   revealMedia(img2);
 
 
 
