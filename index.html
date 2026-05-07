@@ -383,6 +383,8 @@ async function openStudent(student) {
   foto.src = asset(student.folder,'foto_select.jpg');
   await revealMedia(foto);
 
+  document.getElementById('overlay').style.display = 'flex';
+
     // VIDEO
   const showreel = document.getElementById('showreel');
   showreel.src = asset(student.folder,'showreel.webm');
@@ -407,7 +409,7 @@ async function openStudent(student) {
     window.open(portfolio, '_blank');
   };
 
-  document.getElementById('overlay').style.display = 'flex';
+  
 }
 
 /* =========================
