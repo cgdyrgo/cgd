@@ -273,6 +273,10 @@ function asset(folder, file) {
   return `./bilder/${folder}/${file}`;
 }
 
+function resetMedia(el){
+  el.classList.remove('media-ready');
+}
+  
 /* =========================
    MEDIA REVEAL
 ========================= */
@@ -281,26 +285,46 @@ function revealMedia(el){
 
   return new Promise((resolve) => {
 
+    // hide immediately
     el.classList.remove('media-ready');
 
     const done = () => {
-      el.classList.add('media-ready');
-      resolve();
+
+      // tiny delay allows repaint
+      requestAnimationFrame(() => {
+        el.classList.add('media-ready');
+        resolve();
+      });
     };
 
-    // IMAGES
+    // IMAGE
     if(el.tagName === 'IMG'){
 
-      if(el.complete){
-        requestAnimationFrame(done);
+      // force hidden while loading
+      el.style.opacity = 0;
+
+      if(el.complete && el.naturalWidth !== 0){
+
+        done();
+
       } else {
-        el.onload = done;
+
+        el.onload = () => {
+          el.style.opacity = '';
+          done();
+        };
       }
     }
 
     // VIDEO
     if(el.tagName === 'VIDEO'){
-      el.onloadeddata = done;
+
+      el.style.opacity = 0;
+
+      el.onloadeddata = () => {
+        el.style.opacity = '';
+        done();
+      };
     }
 
   });
@@ -378,10 +402,15 @@ async function openStudent(student) {
   document.getElementById('bioText').textContent = bio;
   document.getElementById('name').textContent = student.name;
 
+  resetMedia(foto);
+  resetMedia(img1);
+  resetMedia(img2);
+  resetMedia(showreel);
+
   // FOTO
   const foto = document.getElementById('foto');
   foto.src = asset(student.folder,'foto_select.jpg');
-  arevealMedia(foto);
+  revealMedia(foto);
 
   document.getElementById('overlay').style.display = 'flex';
 
