@@ -7,6 +7,10 @@
 
 <style>
 
+/* =========================
+   BASE
+========================= */
+
 body{
   margin:0;
   background:#000;
@@ -15,7 +19,9 @@ body{
   overflow:hidden;
 }
 
-/* GRID */
+/* =========================
+   GRID
+========================= */
 
 .grid{
   display:grid;
@@ -32,7 +38,7 @@ body{
   overflow:hidden;
 }
 
-/* båda bilderna staplas */
+/* images */
 
 .tile img:not(.logo){
   position:absolute;
@@ -41,29 +47,12 @@ body{
   height:100%;
   object-fit:cover;
   object-position:center;
-
   transform-origin:50% 40%;
-  transform:scale(1.0);
-
-  transition:
-    opacity .4s,
-    transform .4s,
-    filter .4s;
+  transition:opacity .4s, transform .4s;
 }
 
-/* default bild */
-
-.img-default{
-  opacity:1;
-}
-
-/* hover/selected bild */
-
-.img-hover{
-  opacity:0;
-}
-
-/* hover */
+.img-default{opacity:1;}
+.img-hover{opacity:0;}
 
 .tile:hover .img-default{
   opacity:0;
@@ -101,20 +90,13 @@ body{
 
 /* selected */
 
-.tile.selected .img-default{
-  opacity:0;
-}
+.tile.selected .img-default{opacity:0;}
+.tile.selected .img-hover{opacity:1;}
+.tile.selected span{opacity:.8;}
 
-.tile.selected .img-hover{
-  opacity:1;
-}
-
-.tile.selected span{
-  opacity:.8;
-  color:#fff;
-}
-
-/* MODAL */
+/* =========================
+   MODAL
+========================= */
 
 .overlay{
   position:fixed;
@@ -122,10 +104,8 @@ body{
   display:none;
   align-items:center;
   justify-content:center;
-
   background:rgba(0,0,0,.6);
   backdrop-filter:blur(10px);
-
   z-index:10;
 }
 
@@ -133,15 +113,11 @@ body{
   width:100vw;
   height:100vh;
   height:100dvh;
-
   max-width:520px;
   aspect-ratio:2/3;
-
   background:#000;
-
   display:grid;
   grid-template-rows:30% 30% 40%;
-
   overflow:hidden;
 }
 
@@ -165,57 +141,33 @@ body{
   height:100%;
 }
 
-.middle > *{
-  min-height:0;
-}
-
 .bio{
   container-type:size;
-
   padding:10px;
-
-  color:#fff;
-
   display:flex;
   flex-direction:column;
-
   height:100%;
-
-  box-sizing:border-box;
   overflow:hidden;
 }
 
 #bioText{
-  font-size:clamp(13px, 1.9vw, 18px);
   font-size:clamp(6px, 4.2cqw + 4.2cqh, 40px);
-
   line-height:1.3;
-
-  overflow:hidden;
-
   flex:1;
-  min-height:0;
+  overflow:hidden;
 }
 
 /* button */
 
 .bio button{
   margin-top:auto;
-
   padding:8px;
-
-  border:1px solid rgba(255,255,255,0.4);
+  border:1px solid rgba(255,255,255,.4);
   border-radius:999px;
-
   background:transparent;
-
   color:#fff;
-
   font-weight:700;
-
   cursor:pointer;
-
-  font-size:clamp(12px, 1vw + 1vh, 18px);
 }
 
 /* portrait */
@@ -226,78 +178,20 @@ body{
 
 .portrait h1{
   position:absolute;
-
   bottom:10px;
   left:50%;
-
   transform:translateX(-50%);
-
-  font-size:clamp(10px, 0.8vw + 0.8vh, 16px);
-
+  font-size:clamp(10px,.8vw + .8vh,16px);
   letter-spacing:.2em;
-
-  color:#fff;
-
   text-transform:uppercase;
-
-  margin:0;
-
-  font-family:system-ui;
-
-  text-align:center;
-}
-
-/* close hint */
-
-.closeHint{
-  position:absolute;
-
-  top:10px;
-  right:10px;
-
-  width:28px;
-  height:28px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:18px;
-
-  color:rgba(255,255,255,0.8);
-
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:999px;
-
-  background:rgba(0,0,0,0.25);
-
-  backdrop-filter:blur(4px);
-
-  pointer-events:none;
-  user-select:none;
-}
-
-.bottom{
-  display:grid;
-  grid-template-columns:1fr 1fr;
 }
 
 /* logo tile */
 
 #logoTile img{
-  transform:none;
-
   width:100%;
   height:100%;
-
   object-fit:contain;
-  object-position:center;
-
-  background:#000;
-
-  padding:0px;
-
-  display:block;
 }
 
 /* =========================
@@ -306,63 +200,44 @@ body{
 
 .idleModal{
   display:none;
-
   position:absolute;
-
   left:0;
   top:0;
-
   width:40vw;
   height:100vh;
   height:100dvh;
-
   background:#000;
-
   align-items:center;
   justify-content:center;
-
   overflow:hidden;
-
-  z-index:1;
-
   cursor:pointer;
 }
 
 .idleModal img{
   width:100%;
   height:auto;
-  max-width:100%;
-  object-fit:initial;
   display:block;
 }
+
 .idleModal video{
   width:100%;
   height:100%;
-
   object-fit:cover;
 }
 
-#idleVideo{
-  opacity:1;
-  transition:opacity .7s;
+/* =========================
+   AUTOPLAY MODE
+========================= */
+
+body.autoplay .tile{
+  pointer-events:none;
 }
 
-/* portrait */
+/* =========================
+   MEDIA
+========================= */
 
-@media (max-aspect-ratio: 7/10){
-
-  .grid{
-    grid-template-rows:repeat(5, minmax(0,1fr));
-  }
-
-  .tile img{
-    object-position:center;
-  }
-}
-
-/* landscape desktop/tablet */
-
-@media (min-aspect-ratio: 7/10){
+@media (min-aspect-ratio:7/10){
 
   body{
     display:flex;
@@ -371,58 +246,17 @@ body{
 
   .grid{
     width:60vw;
-    height:100vh;
-    height:100dvh;
   }
 
   .overlay{
     position:absolute;
-
     left:0;
     top:0;
-
     width:40vw;
-    height:100vh;
-    height:100dvh;
   }
 
   .idleModal{
     display:flex;
-  }
-
-  .modal{
-    width:100%;
-    height:100%;
-
-    max-width:none;
-
-    grid-template-rows:30% 30% 40%;
-  }
-
-  #bioText{
-    font-size:clamp(13px, 1.9vw, 18px);
-    font-size:clamp(6px, 3.6cqw + 3.6cqh, 40px);
-  }
-}
-
-/* mobile landscape */
-
-@media (min-aspect-ratio: 10/6) and (hover:none){
-
-  .grid{
-    width:53vw;
-  }
-
-  .overlay{
-    width:47vw;
-  }
-
-  .idleModal{
-    width:47vw;
-  }
-
-  .modal{
-    grid-template-rows:50% 50% 0%;
   }
 }
 
@@ -431,51 +265,39 @@ body{
 
 <body>
 
-<!-- GRID -->
-
 <div class="grid" id="grid"></div>
 
-<!-- IDLE MODAL -->
-
+<!-- IDLE -->
 <div class="idleModal" id="idleModal">
-
   <img id="idleImage" src="./qr.jpg" />
-  <video id="idleVideo" muted playsinline webkit-playsinline style="display:none"></video>
-
+  <video id="idleVideo" muted playsinline style="display:none"></video>
 </div>
 
 <!-- MODAL -->
-
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
-
   <div class="modal" id="modal">
 
     <div class="section">
-      <video id="showreel" autoplay muted loop playsinline webkit-playsinline></video>
+      <video id="showreel" autoplay muted loop playsinline></video>
     </div>
 
     <div class="section middle">
-
       <div class="bio">
         <p id="bioText"></p>
         <button id="portfolioBtn">Portfolio</button>
       </div>
-
       <div class="portrait">
         <img id="foto" />
         <h1 id="name"></h1>
-        <div class="closeHint">×</div>
       </div>
-
     </div>
 
-    <div class="section bottom">
+    <div class="section">
       <img id="img1" />
       <img id="img2" />
     </div>
 
   </div>
-
 </div>
 
 <script>
@@ -484,12 +306,13 @@ body{
    STATE
 ========================= */
 
-const selectedStudents = new Set();
-
 let allStudents = [];
+let autoplay = false;
+let autoplayIndex = 0;
+let autoplayTimer = null;
 
-let idleMode = 0;
-let reelIndex = 0;
+let logoClicks = 0;
+let logoClickReset;
 
 /* =========================
    DATA
@@ -500,27 +323,18 @@ async function loadStudents(){
   return await res.json();
 }
 
-async function loadText(path){
-  const res = await fetch(path);
-  return await res.text();
-}
-
 function asset(folder,file){
   return `./bilder/${folder}/${file}`;
 }
 
 /* =========================
-   GRID TILE
+   GRID
 ========================= */
 
 function createTile(s){
 
   const tile = document.createElement('div');
   tile.className = 'tile';
-
-  if(selectedStudents.has(s.folder)){
-    tile.classList.add('selected');
-  }
 
   tile.innerHTML = `
     <img class="img-default" src="${asset(s.folder,'foto.jpg')}" />
@@ -529,19 +343,12 @@ function createTile(s){
   `;
 
   tile.onclick = () => {
-
-    selectedStudents.add(s.folder);
-    tile.classList.add('selected');
-
+    if(autoplay) return;
     openStudent(s);
   };
 
   return tile;
 }
-
-/* =========================
-   GRID
-========================= */
 
 function createGrid(students){
 
@@ -554,18 +361,15 @@ function createGrid(students){
       grid.appendChild(createTile(s));
 
       const logoTile = document.createElement('div');
-
       logoTile.className = 'tile';
       logoTile.id = 'logoTile';
-
       logoTile.style.gridColumn = "span 4";
 
-      logoTile.innerHTML = `
-        <img class="logo" src="./logo.jpg" />
-      `;
+      logoTile.innerHTML = `<img class="logo" src="./logo.jpg" />`;
+
+      logoTile.onclick = handleLogoClick;
 
       grid.appendChild(logoTile);
-
       return;
     }
 
@@ -574,39 +378,28 @@ function createGrid(students){
 }
 
 /* =========================
-   MODAL
+   MODAL (same as click)
 ========================= */
 
 async function openStudent(student){
 
-  const bio = await loadText(asset(student.folder,'bio.txt'));
-  const portfolio = await loadText(asset(student.folder,'portfoliolink.txt'));
+  const bio = await fetch(asset(student.folder,'bio.txt')).then(r=>r.text());
+  const portfolio = await fetch(asset(student.folder,'portfoliolink.txt')).then(r=>r.text());
 
   document.getElementById('bioText').textContent = bio;
-
   document.getElementById('name').textContent = student.name;
 
-  document.getElementById('foto').src =
-    asset(student.folder,'foto_select.jpg');
+  document.getElementById('foto').src = asset(student.folder,'foto_select.jpg');
+  document.getElementById('img1').src = asset(student.folder,'bild1.jpg');
+  document.getElementById('img2').src = asset(student.folder,'bild2.jpg');
+  document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
 
-  document.getElementById('img1').src =
-    asset(student.folder,'bild1.jpg');
-
-  document.getElementById('img2').src =
-    asset(student.folder,'bild2.jpg');
-
-  document.getElementById('showreel').src =
-    asset(student.folder,'showreel.webm');
-
-  const btn = document.getElementById('portfolioBtn');
-
-  btn.onclick = (e)=>{
+  document.getElementById('portfolioBtn').onclick = (e)=>{
     e.stopPropagation();
     window.open(portfolio,'_blank');
   };
 
   document.getElementById('overlay').style.display = 'flex';
-
   document.getElementById('idleModal').style.display = 'none';
 }
 
@@ -614,108 +407,82 @@ async function openStudent(student){
    CLOSE
 ========================= */
 
-function handleOverlayClick(e){
-  closeModal();
-}
-
 function closeModal(){
-
   document.getElementById('overlay').style.display = 'none';
 
-  if(window.matchMedia("(min-aspect-ratio: 7/10)").matches){
-
+  if(window.matchMedia("(min-aspect-ratio:7/10)").matches){
     document.getElementById('idleModal').style.display = 'flex';
   }
 }
 
+function handleOverlayClick(){
+  if(autoplay) stopAutoplay();
+  else closeModal();
+}
+
 /* =========================
-   IDLE MODAL
+   AUTOPLAY SECRET MODE
 ========================= */
 
-function updateIdleMode(){
+function handleLogoClick(){
 
-  const idleImage = document.getElementById('idleImage');
-  const idleVideo = document.getElementById('idleVideo');
+  logoClicks++;
 
-  idleImage.style.display = 'none';
-  idleVideo.style.display = 'none';
+  clearTimeout(logoClickReset);
 
-  /* MODE 0 = QR */
+  logoClickReset = setTimeout(()=>logoClicks=0,600);
 
-  if(idleMode === 0){
+  if(logoClicks >= 3){
 
-    idleImage.src = './qr.jpg';
-    idleImage.style.display = 'block';
-  }
+    logoClicks = 0;
 
-  /* MODE 1 = LOGO */
-
-  if(idleMode === 1){
-
-    idleImage.src = './co_b.jpg';
-    idleImage.style.display = 'block';
-  }
-
-  /* MODE 2 = REELS */
-
-  if(idleMode === 2){
-
-    playIdleReels();
+    autoplay ? stopAutoplay() : startAutoplay();
   }
 }
 
-function playIdleReels(){
+function startAutoplay(){
 
-  const idleVideo = document.getElementById('idleVideo');
+  autoplay = true;
+  autoplayIndex = 0;
 
-  idleVideo.style.display = 'block';
+  document.body.classList.add('autoplay');
 
-  const reels = allStudents.map(s =>
-    asset(s.folder,'showreel.webm')
-  );
-
-  function playNext(){
-
-    idleVideo.style.opacity = 0;
-
-    setTimeout(()=>{
-
-      idleVideo.src = reels[reelIndex];
-
-      idleVideo.play();
-
-      idleVideo.style.opacity = 1;
-
-      reelIndex = (reelIndex + 1) % reels.length;
-
-    },700);
-  }
-
-  playNext();
-
-  idleVideo.onended = playNext;
+  runAutoplay();
 }
 
-document.getElementById('idleModal').onclick = ()=>{
+function runAutoplay(){
 
-  idleMode = (idleMode + 1) % 3;
+  if(!autoplay) return;
 
-  updateIdleMode();
-};
+  const student = allStudents[autoplayIndex];
+
+  openStudent(student);
+
+  autoplayIndex = (autoplayIndex + 1) % allStudents.length;
+
+  autoplayTimer = setTimeout(runAutoplay,10000);
+}
+
+function stopAutoplay(){
+
+  autoplay = false;
+
+  clearTimeout(autoplayTimer);
+
+  document.body.classList.remove('autoplay');
+
+  closeModal();
+}
 
 /* =========================
    INIT
 ========================= */
 
-(async function init(){
+(async function(){
 
-  const students = await loadStudents();
+  allStudents = await loadStudents();
 
-  allStudents = students;
-
-  createGrid(students);
-
-  updateIdleMode();
+  createGrid(allStudents);
 
 })();
 
