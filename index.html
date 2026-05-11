@@ -431,11 +431,7 @@ body{
 
 <body>
 
-<!-- GRID -->
-
 <div class="grid" id="grid"></div>
-
-<!-- IDLE MODAL -->
 
 <div class="idleModal" id="idleModal">
 
@@ -443,8 +439,6 @@ body{
   <video id="idleVideo" muted playsinline webkit-playsinline style="display:none"></video>
 
 </div>
-
-<!-- MODAL -->
 
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
 
@@ -485,11 +479,16 @@ body{
 ========================= */
 
 const selectedStudents = new Set();
-
 let allStudents = [];
 
 let idleMode = 0;
 let reelIndex = 0;
+
+// Autoplay state
+let autoplayInterval = null;
+let isAutoplayActive = false;
+let logoClickCount = 0;
+let lastLogoClickTime = 0;
 
 /* =========================
    DATA
@@ -507,6 +506,45 @@ async function loadText(path){
 
 function asset(folder,file){
   return `./bilder/${folder}/${file}`;
+}
+
+/* =========================
+   AUTOPLAY LOGIC
+========================= */
+
+function toggleAutoplay(forceOff = false) {
+  const gridTiles = document.querySelectorAll('.tile');
+  
+  if (isAutoplayActive || forceOff) {
+    // STOPPA
+    clearInterval(autoplayInterval);
+    isAutoplayActive = false;
+    autoplayInterval = null;
+    
+    // Rensa .selected från alla i grid
+    gridTiles.forEach(t => t.classList.remove('selected'));
+    // Vi rensar även setet så de inte hänger kvar visuellt efter slideshow
+    selectedStudents.clear();
+    
+    closeModal();
+    return;
+  }
+
+  // STARTA
+  isAutoplayActive = true;
+  let currentIndex = 0;
+
+  // Markera hela gridden
+  gridTiles.forEach(t => t.classList.add('selected'));
+
+  const runCycle = () => {
+    if (!isAutoplayActive) return;
+    openStudent(allStudents[currentIndex]);
+    currentIndex = (currentIndex + 1) % allStudents.length;
+  };
+
+  runCycle(); // Kör första direkt
+  autoplayInterval = setInterval(runCycle, 10000); // 10 sekunder
 }
 
 /* =========================
@@ -528,11 +566,12 @@ function createTile(s){
     <span>${s.name.toUpperCase()}</span>
   `;
 
-  tile.onclick = () => {
+  tile.onclick = (e) => {
+    // Om autoplay är aktivt, låt det globala klicket stänga av allt istället
+    if (isAutoplayActive) return;
 
     selectedStudents.add(s.folder);
     tile.classList.add('selected');
-
     openStudent(s);
   };
 
@@ -563,6 +602,23 @@ function createGrid(students){
       logoTile.innerHTML = `
         <img class="logo" src="./logo.jpg" />
       `;
+
+      // Trigger för Autoplay (3 klick)
+      logoTile.onclick = (e) => {
+        if (isAutoplayActive) return; // Låt globala lyssnaren sköta stoppet
+
+        e.stopPropagation();
+        const now = Date.now();
+        if (now - lastLogoClickTime > 500) logoClickCount = 0;
+        
+        logoClickCount++;
+        lastLogoClickTime = now;
+
+        if (logoClickCount === 3) {
+          toggleAutoplay();
+          logoClickCount = 0;
+        }
+      };
 
       grid.appendChild(logoTile);
 
@@ -606,27 +662,35 @@ async function openStudent(student){
   };
 
   document.getElementById('overlay').style.display = 'flex';
-
   document.getElementById('idleModal').style.display = 'none';
 }
 
 /* =========================
-   CLOSE
+   CLOSE / GLOBAL STOP
 ========================= */
 
 function handleOverlayClick(e){
-  closeModal();
+  // Om vi inte är i autoplay, stäng som vanligt
+  if (!isAutoplayActive) {
+    closeModal();
+  }
 }
 
 function closeModal(){
-
   document.getElementById('overlay').style.display = 'none';
 
   if(window.matchMedia("(min-aspect-ratio: 7/10)").matches){
-
     document.getElementById('idleModal').style.display = 'flex';
   }
 }
+
+// Global lyssnare för att avbryta autoplay
+window.addEventListener('click', (e) => {
+  if (isAutoplayActive) {
+    // Stoppa autoplay oavsett var man klickar
+    toggleAutoplay(true);
+  }
+}, true); // Använder capturing för att garantera att vi fångar klicket
 
 /* =========================
    IDLE MODAL
@@ -640,26 +704,17 @@ function updateIdleMode(){
   idleImage.style.display = 'none';
   idleVideo.style.display = 'none';
 
-  /* MODE 0 = QR */
-
   if(idleMode === 0){
-
     idleImage.src = './qr.jpg';
     idleImage.style.display = 'block';
   }
 
-  /* MODE 1 = LOGO */
-
   if(idleMode === 1){
-
     idleImage.src = './co_b.jpg';
     idleImage.style.display = 'block';
   }
 
-  /* MODE 2 = REELS */
-
   if(idleMode === 2){
-
     playIdleReels();
   }
 }
@@ -667,7 +722,6 @@ function updateIdleMode(){
 function playIdleReels(){
 
   const idleVideo = document.getElementById('idleVideo');
-
   idleVideo.style.display = 'block';
 
   const reels = allStudents.map(s =>
@@ -675,31 +729,22 @@ function playIdleReels(){
   );
 
   function playNext(){
-
     idleVideo.style.opacity = 0;
-
     setTimeout(()=>{
-
       idleVideo.src = reels[reelIndex];
-
       idleVideo.play();
-
       idleVideo.style.opacity = 1;
-
       reelIndex = (reelIndex + 1) % reels.length;
-
     },700);
   }
 
   playNext();
-
   idleVideo.onended = playNext;
 }
 
-document.getElementById('idleModal').onclick = ()=>{
-
+document.getElementById('idleModal').onclick = (e)=>{
+  e.stopPropagation();
   idleMode = (idleMode + 1) % 3;
-
   updateIdleMode();
 };
 
@@ -708,15 +753,10 @@ document.getElementById('idleModal').onclick = ()=>{
 ========================= */
 
 (async function init(){
-
   const students = await loadStudents();
-
   allStudents = students;
-
   createGrid(students);
-
   updateIdleMode();
-
 })();
 
 </script>
