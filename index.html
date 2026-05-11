@@ -77,9 +77,7 @@ body{
   transition:.3s;
 }
 
-.tile:hover span{
-  opacity:1;
-}
+.tile:hover span{opacity:1}
 
 /* logo */
 
@@ -267,15 +265,13 @@ body.autoplay .tile{
 
 <div class="grid" id="grid"></div>
 
-<!-- IDLE -->
 <div class="idleModal" id="idleModal">
   <img id="idleImage" src="./qr.jpg" />
   <video id="idleVideo" muted playsinline style="display:none"></video>
 </div>
 
-<!-- MODAL -->
 <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modal">
+  <div class="modal">
 
     <div class="section">
       <video id="showreel" autoplay muted loop playsinline></video>
@@ -306,16 +302,15 @@ body.autoplay .tile{
    STATE
 ========================= */
 
-let allStudents = [];
+let students = [];
+let selectedStudents = new Set();
+
 let autoplay = false;
 let autoplayIndex = 0;
 let autoplayTimer = null;
 
-let logoClicks = 0;
-let logoClickReset;
-
 /* =========================
-   DATA
+   LOAD
 ========================= */
 
 async function loadStudents(){
@@ -323,8 +318,8 @@ async function loadStudents(){
   return await res.json();
 }
 
-function asset(folder,file){
-  return `./bilder/${folder}/${file}`;
+function asset(f, file){
+  return `./bilder/${f}/${file}`;
 }
 
 /* =========================
@@ -343,16 +338,22 @@ function createTile(s){
   `;
 
   tile.onclick = () => {
-    if(autoplay) return;
+
+    if(!autoplay){
+      selectedStudents.add(s.folder);
+      tile.classList.add('selected');
+    }
+
     openStudent(s);
   };
 
   return tile;
 }
 
-function createGrid(students){
+function renderGrid(){
 
   const grid = document.getElementById('grid');
+  grid.innerHTML = '';
 
   students.forEach((s,i)=>{
 
@@ -362,7 +363,6 @@ function createGrid(students){
 
       const logoTile = document.createElement('div');
       logoTile.className = 'tile';
-      logoTile.id = 'logoTile';
       logoTile.style.gridColumn = "span 4";
 
       logoTile.innerHTML = `<img class="logo" src="./logo.jpg" />`;
@@ -370,6 +370,7 @@ function createGrid(students){
       logoTile.onclick = handleLogoClick;
 
       grid.appendChild(logoTile);
+
       return;
     }
 
@@ -378,21 +379,21 @@ function createGrid(students){
 }
 
 /* =========================
-   MODAL (same as click)
+   MODAL
 ========================= */
 
-async function openStudent(student){
+async function openStudent(s){
 
-  const bio = await fetch(asset(student.folder,'bio.txt')).then(r=>r.text());
-  const portfolio = await fetch(asset(student.folder,'portfoliolink.txt')).then(r=>r.text());
+  const bio = await fetch(asset(s.folder,'bio.txt')).then(r=>r.text());
+  const portfolio = await fetch(asset(s.folder,'portfoliolink.txt')).then(r=>r.text());
 
   document.getElementById('bioText').textContent = bio;
-  document.getElementById('name').textContent = student.name;
+  document.getElementById('name').textContent = s.name;
 
-  document.getElementById('foto').src = asset(student.folder,'foto_select.jpg');
-  document.getElementById('img1').src = asset(student.folder,'bild1.jpg');
-  document.getElementById('img2').src = asset(student.folder,'bild2.jpg');
-  document.getElementById('showreel').src = asset(student.folder,'showreel.webm');
+  document.getElementById('foto').src = asset(s.folder,'foto_select.jpg');
+  document.getElementById('img1').src = asset(s.folder,'bild1.jpg');
+  document.getElementById('img2').src = asset(s.folder,'bild2.jpg');
+  document.getElementById('showreel').src = asset(s.folder,'showreel.webm');
 
   document.getElementById('portfolioBtn').onclick = (e)=>{
     e.stopPropagation();
@@ -421,16 +422,19 @@ function handleOverlayClick(){
 }
 
 /* =========================
-   AUTOPLAY SECRET MODE
+   AUTOPLAY
 ========================= */
+
+let logoClicks = 0;
+let logoTimer;
 
 function handleLogoClick(){
 
   logoClicks++;
 
-  clearTimeout(logoClickReset);
+  clearTimeout(logoTimer);
 
-  logoClickReset = setTimeout(()=>logoClicks=0,600);
+  logoTimer = setTimeout(()=>logoClicks=0,500);
 
   if(logoClicks >= 3){
 
@@ -447,20 +451,25 @@ function startAutoplay(){
 
   document.body.classList.add('autoplay');
 
-  runAutoplay();
+  run();
 }
 
-function runAutoplay(){
+function run(){
 
   if(!autoplay) return;
 
-  const student = allStudents[autoplayIndex];
+  const s = students[autoplayIndex];
 
-  openStudent(student);
+  /* 🔥 MARK ALL STUDENTS TEMPORARILY */
+  document.querySelectorAll('.tile').forEach(t=>{
+    t.classList.add('selected');
+  });
 
-  autoplayIndex = (autoplayIndex + 1) % allStudents.length;
+  openStudent(s);
 
-  autoplayTimer = setTimeout(runAutoplay,10000);
+  autoplayIndex = (autoplayIndex + 1) % students.length;
+
+  autoplayTimer = setTimeout(run,10000);
 }
 
 function stopAutoplay(){
@@ -471,6 +480,12 @@ function stopAutoplay(){
 
   document.body.classList.remove('autoplay');
 
+  selectedStudents.clear();
+
+  document.querySelectorAll('.tile').forEach(t=>{
+    t.classList.remove('selected');
+  });
+
   closeModal();
 }
 
@@ -480,9 +495,9 @@ function stopAutoplay(){
 
 (async function(){
 
-  allStudents = await loadStudents();
+  students = await loadStudents();
 
-  createGrid(allStudents);
+  renderGrid();
 
 })();
 
